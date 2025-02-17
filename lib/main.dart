@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'pages/vocabulary_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -44,7 +45,12 @@ class HomePage extends StatelessWidget {
               title: 'Vocabulary',
               color: Colors.blue,
               onTap: () {
-                // TODO: Navigate to vocabulary page
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const VocabularyPage(),
+                  ),
+                );
               },
             ),
             _buildFeatureCard(
