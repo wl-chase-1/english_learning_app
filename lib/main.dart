@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'pages/vocabulary_page.dart';
+import 'pages/article_page.dart';
+import 'pages/grammar_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -55,11 +57,16 @@ class HomePage extends StatelessWidget {
             ),
             _buildFeatureCard(
               context,
-              icon: Icons.record_voice_over,
-              title: 'Speaking',
+              icon: Icons.article,
+              title: 'Article',
               color: Colors.green,
               onTap: () {
-                // TODO: Navigate to speaking practice page
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ArticlePage(),
+                  ),
+                );
               },
             ),
             _buildFeatureCard(
