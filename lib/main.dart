@@ -84,7 +84,12 @@ class HomePage extends StatelessWidget {
               title: 'Grammar',
               color: Colors.purple,
               onTap: () {
-                // TODO: Navigate to grammar page
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const GrammarPage(),
+                  ),
+                );
               },
             ),
           ],
