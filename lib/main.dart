@@ -1,3 +1,4 @@
+import 'package:english_learning_app/pages/listening_page.dart';
 import 'package:flutter/material.dart';
 import 'pages/vocabulary_page.dart';
 import 'pages/article_page.dart';
@@ -75,7 +76,12 @@ class HomePage extends StatelessWidget {
               title: 'Listening',
               color: Colors.orange,
               onTap: () {
-                // TODO: Navigate to listening practice page
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ListeningPage(),
+                  ),
+                );
               },
             ),
             _buildFeatureCard(
