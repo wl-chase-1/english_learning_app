@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 class ArticlePage extends StatelessWidget {
@@ -90,63 +91,270 @@ class ArticleCard extends StatelessWidget {
   }
 }
 
-class ArticleDetailPage extends StatelessWidget {
+class ArticleDetailPage extends StatefulWidget {
   final Article article;
 
   const ArticleDetailPage({super.key, required this.article});
 
   @override
+  State<ArticleDetailPage> createState() => _ArticleDetailPageState();
+}
+
+class _ArticleDetailPageState extends State<ArticleDetailPage> {
+  double _fontSize = 16.0;
+  bool _isDarkMode = false;
+  final Set<String> _highlightedWords = {};
+  final Map<String, String> _notes = {};
+  
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(article.title),
+        title: Text(widget.article.title),
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Colors.white,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.format_size),
+            onPressed: _showFontSizeDialog,
+          ),
+          IconButton(
+            icon: Icon(_isDarkMode ? Icons.light_mode : Icons.dark_mode),
+            onPressed: () {
+              setState(() {
+                _isDarkMode = !_isDarkMode;
+              });
+            },
+          ),
+        ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+      body: Container(
+        color: _isDarkMode ? Colors.grey[900] : Colors.white,
         child: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.article.title,
+                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        color: _isDarkMode ? Colors.white : Colors.black,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.access_time,
+                          size: 16,
+                          color: Colors.grey[600],
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          '${widget.article.readingTime} min read',
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                        const SizedBox(width: 16),
+                        Icon(
+                          Icons.school,
+                          size: 16,
+                          color: Colors.grey[600],
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          widget.article.level,
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 24),
+                    SelectableText.rich(
+                      _buildTextSpans(widget.article.content),
+                      style: TextStyle(
+                        fontSize: _fontSize,
+                        height: 1.5,
+                        color: _isDarkMode ? Colors.white : Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            _buildBottomControls(),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _showNotesDialog,
+        child: const Icon(Icons.note_add),
+      ),
+    );
+  }
+
+  Widget _buildBottomControls() {
+    return Container(
+      padding: const EdgeInsets.all(8.0),
+      decoration: BoxDecoration(
+        color: _isDarkMode ? Colors.grey[850] : Colors.grey[100],
+        border: Border(top: BorderSide(color: Colors.grey.shade300)),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          IconButton(
+            icon: const Icon(Icons.translate),
+            onPressed: () => _showDictionaryDialog(context),
+          ),
+          IconButton(
+            icon: const Icon(Icons.highlight),
+            onPressed: () => _toggleHighlight(),
+          ),
+          IconButton(
+            icon: const Icon(Icons.question_answer),
+            onPressed: () => _showComprehensionQuestions(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  TextSpan _buildTextSpans(String content) {
+    List<TextSpan> spans = [];
+    final words = content.split(RegExp(r'\s+'));
+    
+    for (var word in words) {
+      spans.add(
+        TextSpan(
+          text: '$word ',
+          style: TextStyle(
+            backgroundColor: _highlightedWords.contains(word) 
+                ? Colors.yellow.withOpacity(0.3) 
+                : null,
+          ),
+          recognizer: TapGestureRecognizer()
+            ..onTap = () => _onWordTap(word),
+        ),
+      );
+    }
+    
+    return TextSpan(children: spans);
+  }
+
+  void _showFontSizeDialog() {
+    final List<double> fontSizes = [12, 14, 16, 18, 20, 22, 24];
+    showMenu(
+      context: context,
+      position: RelativeRect.fromLTRB(100, 75, 0, 100),
+      items: fontSizes.map((size) => PopupMenuItem(
+        value: size,
+        child: Text('${size.round()}', 
+          style: TextStyle(fontSize: size),
+        ),
+      )).toList(),
+    ).then((value) {
+      if (value != null) {
+        setState(() {
+          _fontSize = value;
+        });
+      }
+    });
+  }
+
+  void _onWordTap(String word) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(word),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              article.title,
-              style: Theme.of(context).textTheme.headlineSmall,
+            TextButton(
+              onPressed: () {
+                // TODO: Implement dictionary lookup
+                Navigator.pop(context);
+              },
+              child: const Text('Look up in Dictionary'),
             ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Icon(
-                  Icons.access_time,
-                  size: 16,
-                  color: Colors.grey[600],
-                ),
-                const SizedBox(width: 4),
-                Text(
-                  '${article.readingTime} min read',
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-                const SizedBox(width: 16),
-                Icon(
-                  Icons.school,
-                  size: 16,
-                  color: Colors.grey[600],
-                ),
-                const SizedBox(width: 4),
-                Text(
-                  article.level,
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-              ],
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  if (_highlightedWords.contains(word)) {
+                    _highlightedWords.remove(word);
+                  } else {
+                    _highlightedWords.add(word);
+                  }
+                });
+                Navigator.pop(context);
+              },
+              child: Text(_highlightedWords.contains(word) 
+                  ? 'Remove Highlight' 
+                  : 'Highlight Word'),
             ),
-            const SizedBox(height: 24),
-            Text(
-              article.content,
-              style: Theme.of(context).textTheme.bodyLarge,
+            TextButton(
+              onPressed: () {
+                _addNote(word);
+                Navigator.pop(context);
+              },
+              child: const Text('Add Note'),
             ),
           ],
         ),
       ),
     );
+  }
+
+  void _addNote(String word) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Add Note for "$word"'),
+        content: TextField(
+          onSubmitted: (note) {
+            setState(() {
+              _notes[word] = note;
+            });
+            Navigator.pop(context);
+          },
+          decoration: const InputDecoration(
+            hintText: 'Enter your note here',
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showNotesDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('My Notes'),
+        content: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: _notes.entries.map((entry) => ListTile(
+              title: Text(entry.key),
+              subtitle: Text(entry.value),
+            )).toList(),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showDictionaryDialog(BuildContext context) {
+    // TODO: Implement dictionary lookup
+  }
+
+  void _toggleHighlight() {
+    // TODO: Implement text selection highlighting
+  }
+
+  void _showComprehensionQuestions() {
+    // TODO: Implement comprehension questions
   }
 }
 
