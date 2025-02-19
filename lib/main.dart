@@ -53,11 +53,7 @@ class HomePage extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
-                        Icons.school,
-                        size: 60,
-                        color: Colors.white,
-                      ),
+                      Icon(Icons.school, size: 60, color: Colors.white),
                     ],
                   ),
                 ),
@@ -97,10 +93,13 @@ class HomePage extends StatelessWidget {
                   title: 'Vocabulary',
                   description: 'Learn new words and phrases',
                   color: Colors.blue,
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const VocabularyPage()),
-                  ),
+                  onTap:
+                      () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const VocabularyPage(),
+                        ),
+                      ),
                 ),
                 _buildFeatureCard(
                   context,
@@ -108,10 +107,13 @@ class HomePage extends StatelessWidget {
                   title: 'Article',
                   description: 'Read and comprehend texts',
                   color: Colors.green,
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const ArticlePage()),
-                  ),
+                  onTap:
+                      () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ArticlePage(),
+                        ),
+                      ),
                 ),
                 _buildFeatureCard(
                   context,
@@ -119,10 +121,13 @@ class HomePage extends StatelessWidget {
                   title: 'Listening',
                   description: 'Improve listening skills',
                   color: Colors.orange,
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const ListeningPage()),
-                  ),
+                  onTap:
+                      () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ListeningPage(),
+                        ),
+                      ),
                 ),
                 _buildFeatureCard(
                   context,
@@ -130,10 +135,13 @@ class HomePage extends StatelessWidget {
                   title: 'Grammar',
                   description: 'Master English grammar',
                   color: Colors.purple,
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const GrammarPage()),
-                  ),
+                  onTap:
+                      () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const GrammarPage(),
+                        ),
+                      ),
                 ),
               ]),
             ),
@@ -167,17 +175,10 @@ class HomePage extends StatelessWidget {
                   color: color.withOpacity(0.1),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(
-                  icon,
-                  size: 32,
-                  color: color,
-                ),
+                child: Icon(icon, size: 32, color: color),
               ),
               const SizedBox(height: 16),
-              Text(
-                title,
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
+              Text(title, style: Theme.of(context).textTheme.titleLarge),
               const SizedBox(height: 8),
               Text(
                 description,
@@ -193,7 +194,7 @@ class HomePage extends StatelessWidget {
 }
 
 class WelcomeSection extends StatelessWidget {
-  const WelcomeSection({Key? key}) : super(key: key);
+  const WelcomeSection({super.key});
 
   @override
   Widget build(BuildContext context) {

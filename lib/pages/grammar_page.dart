@@ -16,12 +16,14 @@ class GrammarPage extends StatelessWidget {
         children: [
           _buildGrammarCard(
             title: 'Present Simple',
-            description: 'Used for habits, repeated actions, and general truths',
+            description:
+                'Used for habits, repeated actions, and general truths',
             example: 'I go to school every day.',
           ),
           _buildGrammarCard(
             title: 'Present Continuous',
-            description: 'Used for actions happening now or temporary situations',
+            description:
+                'Used for actions happening now or temporary situations',
             example: 'I am studying English now.',
           ),
           _buildGrammarCard(
@@ -36,6 +38,11 @@ class GrammarPage extends StatelessWidget {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        backgroundColor: Colors.purple,
+        child: const Icon(Icons.add),
+      ),
     );
   }
 
@@ -45,6 +52,8 @@ class GrammarPage extends StatelessWidget {
     required String example,
   }) {
     return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+      elevation: 5,
       margin: const EdgeInsets.only(bottom: 16.0),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -60,17 +69,11 @@ class GrammarPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8),
-            Text(
-              description,
-              style: const TextStyle(fontSize: 16),
-            ),
+            Text(description, style: const TextStyle(fontSize: 16)),
             const SizedBox(height: 8),
             Text(
               'Example: $example',
-              style: const TextStyle(
-                fontSize: 16,
-                fontStyle: FontStyle.italic,
-              ),
+              style: const TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
             ),
           ],
         ),
