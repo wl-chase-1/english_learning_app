@@ -17,7 +17,7 @@ class _GrammarPageState extends State<GrammarPage>
     'Common Mistakes',
   ];
   int _selectedIndex = 0;
-  bool _isExpanded = false;
+  final bool _isExpanded = false;
 
   @override
   void initState() {

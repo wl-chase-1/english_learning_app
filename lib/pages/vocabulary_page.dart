@@ -9,7 +9,8 @@ class VocabularyPage extends StatefulWidget {
   State<VocabularyPage> createState() => _VocabularyPageState();
 }
 
-class _VocabularyPageState extends State<VocabularyPage> with SingleTickerProviderStateMixin {
+class _VocabularyPageState extends State<VocabularyPage>
+    with SingleTickerProviderStateMixin {
   final List<VocabularyItem> vocabularyList = [
     VocabularyItem(
       word: 'Hello',
@@ -72,10 +73,7 @@ class _VocabularyPageState extends State<VocabularyPage> with SingleTickerProvid
         foregroundColor: Colors.white,
         bottom: TabBar(
           controller: _tabController,
-          tabs: const [
-            Tab(text: 'Flash Cards'),
-            Tab(text: 'Word List'),
-          ],
+          tabs: const [Tab(text: 'Flash Cards'), Tab(text: 'Word List')],
           labelColor: Colors.white,
           unselectedLabelColor: Colors.white70,
           indicatorColor: Colors.white,
@@ -99,17 +97,20 @@ class _VocabularyPageState extends State<VocabularyPage> with SingleTickerProvid
           Expanded(
             child: TabBarView(
               controller: _tabController,
-              children: [
-                _buildFlashCardsView(),
-                _buildWordListView(),
-              ],
+              children: [_buildFlashCardsView(), _buildWordListView()],
             ),
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // TODO: Implement quiz mode
+          // Implement quiz mode
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => QuizPage(vocabularyList: vocabularyList),
+            ),
+          );
         },
         child: const Icon(Icons.quiz),
       ),
@@ -117,11 +118,15 @@ class _VocabularyPageState extends State<VocabularyPage> with SingleTickerProvid
   }
 
   Widget _buildFlashCardsView() {
-    final filteredList = vocabularyList.where((item) {
-      final matchesSearch = item.word.toLowerCase().contains(searchQuery.toLowerCase());
-      final matchesDifficulty = filterDifficulty == null || item.difficulty == filterDifficulty;
-      return matchesSearch && matchesDifficulty;
-    }).toList();
+    final filteredList =
+        vocabularyList.where((item) {
+          final matchesSearch = item.word.toLowerCase().contains(
+            searchQuery.toLowerCase(),
+          );
+          final matchesDifficulty =
+              filterDifficulty == null || item.difficulty == filterDifficulty;
+          return matchesSearch && matchesDifficulty;
+        }).toList();
 
     return Column(
       children: [
@@ -142,11 +147,15 @@ class _VocabularyPageState extends State<VocabularyPage> with SingleTickerProvid
   }
 
   Widget _buildWordListView() {
-    final filteredList = vocabularyList.where((item) {
-      final matchesSearch = item.word.toLowerCase().contains(searchQuery.toLowerCase());
-      final matchesDifficulty = filterDifficulty == null || item.difficulty == filterDifficulty;
-      return matchesSearch && matchesDifficulty;
-    }).toList();
+    final filteredList =
+        vocabularyList.where((item) {
+          final matchesSearch = item.word.toLowerCase().contains(
+            searchQuery.toLowerCase(),
+          );
+          final matchesDifficulty =
+              filterDifficulty == null || item.difficulty == filterDifficulty;
+          return matchesSearch && matchesDifficulty;
+        }).toList();
 
     return ListView.separated(
       itemCount: filteredList.length,
@@ -158,7 +167,33 @@ class _VocabularyPageState extends State<VocabularyPage> with SingleTickerProvid
           subtitle: Text('${item.partOfSpeech} - ${item.meaning}'),
           trailing: _buildProgressIndicator(item.masterLevel),
           onTap: () {
-            // TODO: Show detailed word view
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text(item.word),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('Meaning: ${item.meaning}'),
+                      Text('Example: ${item.example}'),
+                      Text('Example Translation: ${item.exampleTranslation}'),
+                      Text('Pronunciation: ${item.pronunciation}'),
+                      Text('Part of Speech: ${item.partOfSpeech}'),
+                      Text('Difficulty: ${item.difficulty.name}'),
+                    ],
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('Close'),
+                    ),
+                  ],
+                );
+              },
+            );
           },
         );
       },
@@ -181,24 +216,25 @@ class _VocabularyPageState extends State<VocabularyPage> with SingleTickerProvid
               ],
             ),
             const Spacer(),
-            Text(
-              item.word,
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
+            Text(item.word, style: Theme.of(context).textTheme.headlineMedium),
             const SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   item.pronunciation,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: Colors.grey,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleMedium?.copyWith(color: Colors.grey),
                 ),
                 IconButton(
                   icon: const Icon(Icons.volume_up),
                   onPressed: () {
-                    // TODO: Implement text-to-speech
+                    // Implement text-to-speech
+                    // You can use a package like flutter_tts to implement this feature
+                    // Example:
+                    // FlutterTts flutterTts = FlutterTts();
+                    // await flutterTts.speak(item.word);
                   },
                 ),
               ],
@@ -206,16 +242,13 @@ class _VocabularyPageState extends State<VocabularyPage> with SingleTickerProvid
             Text(
               item.partOfSpeech,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.grey,
-                    fontStyle: FontStyle.italic,
-                  ),
+                color: Colors.grey,
+                fontStyle: FontStyle.italic,
+              ),
             ),
             const Spacer(),
             if (isShowingAnswer) ...[
-              Text(
-                item.meaning,
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
+              Text(item.meaning, style: Theme.of(context).textTheme.titleLarge),
               const SizedBox(height: 16),
               Text(
                 item.example,
@@ -225,9 +258,9 @@ class _VocabularyPageState extends State<VocabularyPage> with SingleTickerProvid
               const SizedBox(height: 8),
               Text(
                 item.exampleTranslation,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.grey,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
                 textAlign: TextAlign.center,
               ),
             ],
@@ -250,12 +283,18 @@ class _VocabularyPageState extends State<VocabularyPage> with SingleTickerProvid
                 isShowingAnswer = !isShowingAnswer;
               });
             },
-            icon: Icon(isShowingAnswer ? Icons.visibility_off : Icons.visibility),
+            icon: Icon(
+              isShowingAnswer ? Icons.visibility_off : Icons.visibility,
+            ),
             label: Text(isShowingAnswer ? 'Hide Answer' : 'Show Answer'),
           ),
           ElevatedButton.icon(
             onPressed: () {
-              // TODO: Add to review list
+              // Add to review list
+              setState(() {
+                // Implement your logic to add the item to a review list
+                // For example, you can add the item to a separate list and save it to a database or local storage
+              });
             },
             icon: const Icon(Icons.bookmark_border),
             label: const Text('Review Later'),
@@ -315,4 +354,18 @@ class VocabularyItem {
     DateTime? lastReviewDate,
     this.masterLevel = 0,
   }) : lastReviewDate = lastReviewDate ?? DateTime.now();
+}
+
+class QuizPage extends StatelessWidget {
+  final List<VocabularyItem> vocabularyList;
+
+  const QuizPage({super.key, required this.vocabularyList});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Quiz')),
+      body: Center(child: Text('Quiz content goes here')),
+    );
+  }
 }
